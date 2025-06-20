@@ -35,6 +35,12 @@ jobs:
         run: |
           echo "${{ steps.test-action-latest.outputs.version }}"
 
+      - name: Use powershell-yaml
+        run: |
+          $data = "hello: world"
+          $yml = ConvertFrom-Yaml -Yaml "$data"
+          $json = ConvertTo-Yaml -JsonCompatible -Data $yml;
+
       - name: Delete the cache
         if: steps.test-action-latest.outputs.cache-hit == 'true'
         run: |
