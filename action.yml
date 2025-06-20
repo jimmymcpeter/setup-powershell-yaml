@@ -1,0 +1,54 @@
+name: Setup powershell-yaml
+description: 'Setup powershell-yaml for use in GitHub Actions'
+
+inputs:
+  version:
+    description: 'Version to setup. Latest version is setup if not specified. See https://www.powershellgallery.com/packages/powershell-yaml'
+    required: false
+  
+outputs:
+  version:
+    description: 'The installed powershell-yaml version.'
+    value: ${{ steps.pwsh-vars.outputs.version }}
+  cache-hit:
+    description: 'A boolean value to indicate if a cache was hit.'
+    value: ${{ steps.pwsh-cache.outputs.cache-hit }}
+  cache-key:
+    description: 'The cache key used.'
+    value: ${{ steps.pwsh-vars.outputs.cache_key }}
+    
+runs:
+  using: composite
+  steps:
+    - name: Declare variables
+      id: pwsh-vars
+      shell: pwsh
+      # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath
+      run: |
+        $version = "${{ inputs.version }}"
+        if ("$version" -eq "") {
+          $version = $(Find-Module -Name "powershell-yaml").Version
+          echo "No version specified, using latest version: $version"
+        }
+        echo "version=$version" >> $ENV:GITHUB_OUTPUT
+
+        if ("${{ runner.os }}" -eq "Windows") {
+          echo "user_module_dir=$([Environment]::GetFolderPath('MyDocuments'))\PowerShell\Modules\powershell-yaml\$version" >> $ENV:GITHUB_OUTPUT
+        } else {
+          echo "user_module_dir=$HOME/.local/share/powershell/Modules/powershell-yaml/$version" >> $ENV:GITHUB_OUTPUT
+        }
+
+        echo "cache_key=setup-powershell-yaml-${{ runner.os }}-$version" >> $ENV:GITHUB_OUTPUT
+
+    - name: Setup cache
+      id: pwsh-cache
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      with:
+        path: ${{ steps.pwsh-vars.outputs.user_module_dir }}
+        key: ${{ steps.pwsh-vars.outputs.cache_key }}
+
+    - name: Install powershell-yaml
+      shell: pwsh
+      if: steps.pwsh-cache.outputs.cache-hit != 'true'
+      run: |
+        Install-Module powershell-yaml -Force -RequiredVersion "${{ steps.pwsh-vars.outputs.version }}"
