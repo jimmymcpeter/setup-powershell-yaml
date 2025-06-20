@@ -1,4 +1,4 @@
-name: Setup powershell-yaml
+name: setup-powershell-yaml
 description: 'Setup powershell-yaml for use in GitHub Actions'
 
 inputs:
@@ -16,7 +16,7 @@ outputs:
   cache-key:
     description: 'The cache key used.'
     value: ${{ steps.pwsh-vars.outputs.cache_key }}
-    
+
 runs:
   using: composite
   steps:
