@@ -3,7 +3,7 @@ description: "Setup powershell-yaml for use in GitHub Actions"
 
 inputs:
   version:
-    description: "Version to setup. Latest version is setup if not specified. See https://www.powershellgallery.com/packages/powershell-yaml"
+    description: "Version to setup. Latest version is setup if not specified. Setting a version will be fastest. See https://www.powershellgallery.com/packages/powershell-yaml"
     required: false
 
 outputs:
