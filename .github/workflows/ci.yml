@@ -40,3 +40,4 @@ jobs:
           $data = "hello: world"
           $yml = ConvertFrom-Yaml -Yaml "$data"
           $json = ConvertTo-Yaml -JsonCompatible -Data $yml;
+          echo $json
