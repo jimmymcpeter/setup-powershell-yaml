@@ -34,7 +34,7 @@ with:
 - name: Use the JSON
   shell: pwsh
   env:
-    HELLO: ${{ fromJSON(needs.parse-yaml.outputs.json_out).hello }}
+    HELLO: ${{ fromJSON(steps.parse-yaml.outputs.json_out).hello }}
   run: |
     echo "Hello ${{ env.HELLO }}!"
 ```
