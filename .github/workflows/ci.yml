@@ -11,6 +11,10 @@ on:
     branches:
       - main
 
+  schedule:
+    # Test latest versions once a month
+    - cron: '30 8 15 * *'
+
 permissions:
   contents: read
 
