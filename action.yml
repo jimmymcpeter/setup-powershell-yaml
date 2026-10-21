@@ -43,15 +43,25 @@ runs:
 
         echo "cache_key=setup-powershell-yaml-${{ runner.os }}-$version" >> $ENV:GITHUB_OUTPUT
 
-    - name: Setup cache
-      id: pwsh-cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    - name: Restore powershell-yaml cache
+      id: pwsh-restore
+      uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       with:
         path: ${{ steps.pwsh-vars.outputs.user_module_dir }}
         key: ${{ steps.pwsh-vars.outputs.cache_key }}
 
     - name: Install powershell-yaml
+      id: pwsh-install
       shell: pwsh
-      if: steps.pwsh-cache.outputs.cache-hit != 'true'
+      if: steps.pwsh-restore.outputs.cache-hit != 'true'
       run: |
         Install-Module powershell-yaml -Force -RequiredVersion "${{ steps.pwsh-vars.outputs.version }}"
+        echo "installed=true" >> $ENV:GITHUB_OUTPUT
+
+    - name: Save powershell-yaml cache
+      id: pwsh-save
+      if: steps.pwsh-restore.outputs.cache-hit != 'true' && steps.pwsh-install.outputs.installed == 'true'
+      uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      with:
+        path: ${{ steps.pwsh-vars.outputs.user_module_dir }}
+        key: ${{ steps.pwsh-vars.outputs.cache_key }}
