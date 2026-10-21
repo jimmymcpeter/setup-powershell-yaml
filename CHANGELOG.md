@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/jimmymcpeter/setup-powershell-yaml/compare/v2.0.1...v2.0.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* cache warnings by splitting restore/save ([#39](https://github.com/jimmymcpeter/setup-powershell-yaml/issues/39)) ([f6536ba](https://github.com/jimmymcpeter/setup-powershell-yaml/commit/f6536ba59a78dc5f94ae2c494539d29f475a69f8))
+
 ## [2.0.1](https://github.com/jimmymcpeter/setup-powershell-yaml/compare/v2.0.0...v2.0.1) (2026-09-17)
 
 
